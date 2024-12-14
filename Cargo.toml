@@ -1,0 +1,8 @@
+[package]
+name = "hello-torch"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+tch =  "0.17.0"
+
