@@ -7,9 +7,11 @@ https://download.pytorch.org/libtorch/cu124/libtorch-win-shared-with-deps-debug-
 Установите путь к папке в переменную окружения %LIBTORCH%
 добавьте  путь %LIBTORCH%\lib в переменную окружения PATH
 
+rucstup default должен возвращать msvc toolchain
+
 
 Для включения вычисления на видеокарте с поддержкой cuda скачайте и установите cuda toolkit.
 https://developer.download.nvidia.com/compute/cuda/12.4.1/network_installers/cuda_12.4.1_windows_network.exe
 
-в версии tch 0.18.0 не работает cuda, это баг tch, так как нативная программа на C++ поддерживает cuda,
+в версии tch 0.18.0 не работает cuda, это баг tch, так как нативная программа на C++ c libtorch deps 2.5.1 компилируется и поддерживает cuda.
 поэтому, если хотим считать нейронки на видеокарте ставим вресию tch 0.17.0
