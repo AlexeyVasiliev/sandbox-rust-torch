@@ -1,16 +1,16 @@
 extern crate tch;
-use tch::{Device, Cuda};
+use tch::{Device, Cuda, Tensor};
 
 fn main() {
-    // // Проверка наличия доступного CUDA-устройства
-    // if Device::cuda_if_available()
-    //     println!("CUDA доступен!");
-    // } else {
-    //     println!("CUDA недоступен.");
-    // }
-
-    // // Вывод информации о текущем устройстве
-   //let device = Device::cuda_if_available();
-   println!("Текущее устройство: {:?}", Device::cuda_if_available());
-   println!("Текущее устройство: {:?}", Cuda::cudnn_is_available());
+    let gpu = Device::cuda_if_available();
+    let cpu = Device::Cpu;
+    println!("Текущее устройство: {:?}", gpu);
+    println!("Текущее CudaNN: {:?}", Cuda::cudnn_is_available());
+    let t = Tensor::from_slice(&[3, 1, 4, 1, 5]);
+    let t = t * 2;
+    let tc = t.to_device(gpu);
+    let cc = t.to_device(cpu);
+    tc.print();
+    cc.print();
 }
+  
