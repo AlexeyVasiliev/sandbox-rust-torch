@@ -1,4 +1,31 @@
+use anyhow::Error;
+use tch::vision::imagenet;
+
+
 mod nn;
-pub fn run_cpu_gpu() {
-    nn::cpu_gpu();
+#[derive(Debug)]
+pub struct ImageClass {
+    pub class:String,
+    pub probability:f64
+}
+#[derive(Debug)]
+pub struct ImageDefenition {
+    pub classes:  Vec<ImageClass>
+}
+
+
+pub fn recognize_image(weights:&std::path::Path, image: String) -> Result<ImageDefenition,Error>{
+    let output = nn::recognize_image(weights,image)?;
+    let mut image_definition = ImageDefenition {
+        classes: Vec::new()
+    };
+    for (probability, class) in imagenet::top(&output, 5).iter() {
+        image_definition.classes.push(
+            ImageClass {
+                class: class.to_string(),
+                probability: *probability
+            }
+        );
+    }
+    Ok(image_definition)
 }
