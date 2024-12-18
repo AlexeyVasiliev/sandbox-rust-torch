@@ -7,15 +7,34 @@
         {
             "type": "lldb",
             "request": "launch",
-            "name": "Debug executable 'hello-torch'",
+            "name": "Debug unit tests in library 'sandbox_rust_torch'",
+            "cargo": {
+                "args": [
+                    "test",
+                    "--no-run",
+                    "--lib",
+                    "--package=sandbox_rust_torch"
+                ],
+                "filter": {
+                    "name": "sandbox_rust_torch",
+                    "kind": "lib"
+                }
+            },
+            "args": [],
+            "cwd": "${workspaceFolder}"
+        },
+        {
+            "type": "lldb",
+            "request": "launch",
+            "name": "Debug executable 'sandbox_rust_torch'",
             "cargo": {
                 "args": [
                     "build",
-                    "--bin=hello-torch",
-                    "--package=hello-torch"
+                    "--bin=sandbox_rust_torch",
+                    "--package=sandbox_rust_torch"
                 ],
                 "filter": {
-                    "name": "hello-torch",
+                    "name": "sandbox_rust_torch",
                     "kind": "bin"
                 }
             },
@@ -25,16 +44,16 @@
         {
             "type": "lldb",
             "request": "launch",
-            "name": "Debug unit tests in executable 'hello-torch'",
+            "name": "Debug unit tests in executable 'sandbox_rust_torch'",
             "cargo": {
                 "args": [
                     "test",
                     "--no-run",
-                    "--bin=hello-torch",
-                    "--package=hello-torch"
+                    "--bin=sandbox_rust_torch",
+                    "--package=sandbox_rust_torch"
                 ],
                 "filter": {
-                    "name": "hello-torch",
+                    "name": "sandbox_rust_torch",
                     "kind": "bin"
                 }
             },
