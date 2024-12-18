@@ -7,25 +7,6 @@
         {
             "type": "lldb",
             "request": "launch",
-            "name": "Debug unit tests in library 'sandbox_rust_torch'",
-            "cargo": {
-                "args": [
-                    "test",
-                    "--no-run",
-                    "--lib",
-                    "--package=sandbox_rust_torch"
-                ],
-                "filter": {
-                    "name": "sandbox_rust_torch",
-                    "kind": "lib"
-                }
-            },
-            "args": [],
-            "cwd": "${workspaceFolder}"
-        },
-        {
-            "type": "lldb",
-            "request": "launch",
             "name": "Debug executable 'sandbox_rust_torch'",
             "cargo": {
                 "args": [
@@ -38,12 +19,12 @@
                     "kind": "bin"
                 }
             },
-            "args": [],
+            "args": ["resnet34.ot","mig.jpg"],
             "cwd": "${workspaceFolder}"
         },
+       
         {
             "type": "lldb",
-            "request": "launch",
             "name": "Debug unit tests in executable 'sandbox_rust_torch'",
             "cargo": {
                 "args": [
