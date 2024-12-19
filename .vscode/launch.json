@@ -19,12 +19,12 @@
                     "kind": "bin"
                 }
             },
-            "args": ["resnet34.ot","mig.jpg"],
+            "args": [],
             "cwd": "${workspaceFolder}"
         },
-       
         {
             "type": "lldb",
+            "request": "launch",
             "name": "Debug unit tests in executable 'sandbox_rust_torch'",
             "cargo": {
                 "args": [

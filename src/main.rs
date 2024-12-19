@@ -28,15 +28,22 @@
 use std::path;
 
 use futures::stream::StreamExt;
+pub mod cfg;
+use cfg::Config;
 #[tokio::main]
 async fn main() -> Result<(), async_nats::Error> {
-    let client = async_nats::connect("localhost:4222").await?;
-    let mut subscriber = client.subscribe("messages").await?;
+    Config::init_env();
+    let config = cfg::Config::build()?;
+    let client = async_nats::connect(config.nats_conn_string).await?;
+    let mut subscriber = client.subscribe(config.nats_subject_in).await?;
+    let nats_subject_out = config.nats_subject_out;
     let weights =path::Path::new("resnet34.ot");
     while let Some(message) = subscriber.next().await {
         let bytes = message.payload;
         let output = sandbox_rust_torch::recognize_image(weights, bytes.to_vec())?;
-        println!("{output:?}");
+        let s = format!("{output:?}");
+        client.publish(nats_subject_out.clone(), s.clone().into()).await?;
+        println!("publish result: {s}");
     }
     Ok(())
 }
