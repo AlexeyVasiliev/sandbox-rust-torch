@@ -24,28 +24,10 @@
 // https://github.com/LaurentMazare/ocaml-torch/releases/download/v0.1-unstable/convmixer1024_20.ot
 // In order to obtain the dinov2 weights, e.g. dinov2_vits14.safetensors, run the
 // src/vision/export_dinov2.py
-// use anyhow::{bail, Result};
-
-// pub fn main() -> Result<()> {
-//     let args: Vec<_> = std::env::args().collect();
-//     let (weights, image) = match args.as_slice() {
-//         [_, w, i] => (std::path::Path::new(w), i.to_owned()),
-//         _ => bail!("usage: main resnet18.ot image.jpg"),
-//     };
-//     let mut file = File::open(image)?;
-//     let mut data = vec![];
-//     file.read_to_end(&mut data)?;
-
-//     let output = sandbox_rust_torch::recognize_image(weights, data)?;
-//     println!("{output:?}");
-//     Ok(())
-// }
-
 
 use std::path;
 
 use futures::stream::StreamExt;
-//use anyhow::bail;
 #[tokio::main]
 async fn main() -> Result<(), async_nats::Error> {
     let client = async_nats::connect("localhost:4222").await?;
