@@ -14,8 +14,8 @@ pub struct ImageDefenition {
 }
 
 
-pub fn recognize_image(weights:&std::path::Path, image: String) -> Result<ImageDefenition,Error>{
-    let output = nn::recognize_image(weights,image)?;
+pub fn recognize_image(weights:&std::path::Path, data: Vec<u8>) -> Result<ImageDefenition,Error>{
+    let output = nn::recognize_image(weights,data)?;
     let mut image_definition = ImageDefenition {
         classes: Vec::new()
     };
