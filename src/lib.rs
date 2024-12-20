@@ -1,14 +1,15 @@
 use anyhow::Error;
+use serde::Serialize;
 use tch::vision::imagenet;
 
 
 mod nn;
-#[derive(Debug)]
+#[derive(Debug,Serialize)]
 pub struct ImageClass {
     pub class:String,
     pub probability:f64
 }
-#[derive(Debug)]
+#[derive(Debug,Serialize)]
 pub struct ImageDefenition {
     pub classes:  Vec<ImageClass>
 }
