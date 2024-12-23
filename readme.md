@@ -31,7 +31,7 @@ wsl
  - установите дистрибутив linux (ubuntu) в wsl.
  - для работу нужно установить pytorch v2.4.0
 
-    pip install torch==2.4.0 torchvision==0.19.0 torchaudio==2.4.0  --index-url https://download.pytorch.org/whl/cu124 --break-system-packages.
+    pip install torch==2.4.0 torchvision==0.19.0 torchaudio==2.4.0  --index-url https://download.pytorch.org/whl/cu124 --break-system-packages
  - libtorch 
  
     https://download.pytorch.org/libtorch/cu124/libtorch-shared-with-deps-2.4.0%2Bcu124.zip
