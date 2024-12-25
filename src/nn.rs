@@ -10,7 +10,7 @@ pub fn recognize_image(weights:&std::path::Path, data:  Vec<u8>) -> Result<tch::
     //let mut file = File::open("bobby.jpg")?;
     //let mut data = vec![];
     //file.read_to_end(data)?;
-    let image = imagenet::load_image_from_memory(&data)?;
+    let image = imagenet::load_image_and_resize224_from_memory(&data)?;
 
     // Create the model and load the weights from the file.
     let mut vs = tch::nn::VarStore::new(tch::Device::Cpu);

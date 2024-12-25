@@ -42,6 +42,7 @@ async fn main() -> Result<(), async_nats::Error> {
     let mut subscriber = client.subscribe(config.nats_subject_in).await?;
     let nats_subject_out = config.nats_subject_out;
     let weights =path::Path::new("resnet34.ot");
+    println!("ready to recognize an image from nats");
     while let Some(message) = subscriber.next().await {
         let image_message_str = std::str::from_utf8(&message.payload)?;
         let deserialized_image_message: ImageRequest = from_str(&image_message_str)?;
