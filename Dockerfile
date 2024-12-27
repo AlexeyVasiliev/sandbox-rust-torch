@@ -1,45 +1,46 @@
-# Этап сборки приложения
+# Этап подготовки билдера
 FROM dore.altatec.ru/altatec/rust:1.82.0 AS builder
-WORKDIR /usr/src/app
+WORKDIR /
 
-# Копируем файлы зависимостей и .env
-COPY Cargo.toml Cargo.lock .env ./
-RUN ls -la && echo "After copying Cargo.toml, Cargo.lock, .env"
+#Установка переменных среды билдера
+ARG LIBTORCH_USE_PYTORCH=1
 
-# Копируем исходный код
-COPY src src
-RUN ls -la src && echo "After copying src directory"
+# Установка версии компилятора по умолчанию
+RUN rustup target add x86_64-unknown-linux-gnu
 
-# Сборка приложения
-RUN cargo build --release
-RUN ls -la target/release && echo "After building the application"
-
-# Этап конечного образа
-FROM dore.altatec.ru/altatec/debian:bookworm-slim
-
-# Установка необходимых пакетов
+#Установка пакетов
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
-        curl \
-        dnsutils \
-        iputils-ping \
-        netcat-openbsd && \
-    rm -rf /var/lib/apt/lists/*
+		python3-pip -y && \
+    rm -rf /var/lib/apt/lists
 
-WORKDIR /opt/app
+#Установка Питон пакетов
+RUN pip3 install torch==2.4.0 torchvision==0.19.0 torchaudio==2.4.0 --index-url https://download.pytorch.org/whl/cpu --break-system-packages
 
-# Копируем собранный бинарник и .env из этапа сборки
-COPY --from=builder /usr/src/app/target/release/sandbox_rust_api /opt/app/sandbox_rust_api
+# Копирование исходников
+WORKDIR /usr/src/app
+COPY Cargo.toml Cargo.lock .env resnet34.ot ./
+COPY src src
+
+#Билдим
+RUN cargo build --release
+
+#Этап сборки образа
+FROM dore.altatec.ru/altatec/rust:1.82.0 AS prod
+WORKDIR /
+
+#Скачивания libtorch
+ADD https://download.pytorch.org/libtorch/cpu/libtorch-shared-with-deps-2.4.0%2Bcpu.zip /usr/lib/libtorchZip.zip
+WORKDIR /usr/lib
+RUN unzip libtorchZip.zip && rm libtorchZip.zip
+
+#Копирования образа
+WORKDIR /
+RUN mkdir /opt/app
+COPY --from=builder /usr/src/app/target/release/sandbox_rust_torch /opt/app/sandbox_rust_torch
 COPY --from=builder /usr/src/app/.env /opt/app/.env
+COPY --from=builder /usr/src/app/resnet34.ot /opt/app/resner34.ot
 
-# Устанавливаем права на выполнение бинарника
-RUN chmod +x /opt/app/sandbox_rust_api
-
-# Проверяем содержимое рабочей директории
-RUN ls -la /opt/app && echo "After copying sandbox_rust_api and .env"
-
-# Открываем порт 3000
-# EXPOSE 3000
-
-# Устанавливаем команду по умолчанию
-CMD ["./sandbox_rust_api"]
+#Запуск
+WORKDIR /opt/app
+CMD ["./sandbox_rust_torch"]

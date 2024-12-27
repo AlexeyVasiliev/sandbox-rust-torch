@@ -4,8 +4,8 @@ services:
   app:
     container_name: sandbox-rust-torch
     image: ${DOCKER_REGISTRY-}sandboxrusttorch
-    # ports:
-      # - 3000:3000
     build:
       context: .
       dockerfile: Dockerfile
+    environment:
+      LD_LIBRARY_PATH: "/usr/lib/libtorch/lib"
