@@ -39,7 +39,6 @@ RUN unzip libtorchZip.zip && rm libtorchZip.zip && ls /usr/lib/libtorch/lib
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
         net-tools \         # Для netstat
-        telnet \            # Для telnet
         dnsutils \          # Для nslookup
         curl \              # Для curl
     && rm -rf /var/lib/apt/lists/*
