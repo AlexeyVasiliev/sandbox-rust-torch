@@ -38,10 +38,12 @@ RUN unzip libtorchZip.zip && rm libtorchZip.zip && ls /usr/lib/libtorch/lib
 # Установка диагностических инструментов
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
-        net-tools \         # Для netstat
-        curl \              # Для curl
+        net-tools \
+        iproute2 \
+        telnet \
+        dnsutils \
+        curl \
     && rm -rf /var/lib/apt/lists/*
-
 # Копирование образа
 WORKDIR /
 RUN mkdir /opt/app
