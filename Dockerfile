@@ -39,7 +39,7 @@ WORKDIR /
 RUN mkdir /opt/app
 COPY --from=builder /usr/src/app/target/release/sandbox_rust_torch /opt/app/sandbox_rust_torch
 COPY --from=builder /usr/src/app/.env /opt/app/.env
-COPY --from=builder /usr/src/app/resnet34.ot /opt/app/resner34.ot
+COPY --from=builder /usr/src/app/resnet34.ot /opt/app/resnet34.ot
 
 #Запуск
 WORKDIR /opt/app
