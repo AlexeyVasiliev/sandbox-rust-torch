@@ -26,7 +26,7 @@ COPY src src
 RUN cargo build --release
 
 # Этап сборки образа
-FROM ubuntu:24.04
+FROM dore.altatec.ru/altatec/debian:bookworm-slim
 WORKDIR /
 
 # Установка диагностических инструментов
