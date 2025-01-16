@@ -26,14 +26,8 @@ COPY src src
 RUN cargo build --release
 
 # Этап сборки образа
-FROM dore.altatec.ru/altatec/rust:1.82.0 AS prod
+FROM ubuntu:24.04
 WORKDIR /
-
-# Скачивание libtorch
-ADD https://download.pytorch.org/libtorch/cpu/libtorch-shared-with-deps-2.4.0%2Bcpu.zip /usr/lib/libtorchZip.zip
-WORKDIR /usr/lib
-# Убедимся, что библиотеки успешно распакованы
-RUN unzip libtorchZip.zip && rm libtorchZip.zip && ls /usr/lib/libtorch/lib 
 
 # Установка диагностических инструментов
 RUN apt-get update && \
@@ -43,7 +37,17 @@ RUN apt-get update && \
         telnet \
         dnsutils \
         curl \
+		unzip \
+	    libgomp1 \
     && rm -rf /var/lib/apt/lists/*
+	
+# Скачивание libtorch
+ADD https://download.pytorch.org/libtorch/cpu/libtorch-shared-with-deps-2.4.0%2Bcpu.zip /usr/lib/libtorchZip.zip
+WORKDIR /usr/lib
+# Убедимся, что библиотеки успешно распакованы
+RUN unzip libtorchZip.zip && rm libtorchZip.zip && ls /usr/lib/libtorch/lib 
+
+ENV LD_LIBRARY_PATH=/usr/lib/libtorch/lib
 # Копирование образа
 WORKDIR /
 RUN mkdir /opt/app
