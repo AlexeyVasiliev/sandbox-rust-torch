@@ -34,8 +34,9 @@ use cfg::Config;
 use sandbox_rust_torch::ImageDefenition;
 use serde::{Serialize,Deserialize};
 use serde_json::{to_string, from_str};
+use anyhow::Error;
 #[tokio::main]
-async fn main() -> Result<(), async_nats::Error> {
+async fn main() -> Result<(), Error> {
     Config::init_env();
     let config = cfg::Config::build()?;
     let client = async_nats::connect(config.nats_conn_string).await?;
@@ -47,16 +48,23 @@ async fn main() -> Result<(), async_nats::Error> {
         let image_message_str = std::str::from_utf8(&message.payload)?;
         let deserialized_image_message: ImageRequest = from_str(&image_message_str)?;
         println!("image id {}",deserialized_image_message.id);
-        let output = sandbox_rust_torch::recognize_image(weights, deserialized_image_message.image.to_vec())?;
+        let output = sandbox_rust_torch::recognize_image(weights, deserialized_image_message.image.to_vec());
+        match output {
+            Ok(out) => {
+                let response = ImageResponse {
+                    id: deserialized_image_message.id,
+                    description: out
+                };
+                let json = to_string(&response)?;
+                let s = json.clone();
+                client.publish(nats_subject_out.clone(), json.into()).await?;
+                println!("publish result: {s}");
+            },
+            //Err(err) => return Err(err),
+            Err(err) => println!("{}",err)
+        }
        // let s = format!("{output:?}");
-        let response = ImageResponse {
-            id: deserialized_image_message.id,
-            description: output
-        };
-        let json = to_string(&response)?;
-        let s = json.clone();
-        client.publish(nats_subject_out.clone(), json.into()).await?;
-        println!("publish result: {s}");
+        
     }
     Ok(())
 }
