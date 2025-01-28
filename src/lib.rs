@@ -1,6 +1,6 @@
 use anyhow::Error;
 use serde::Serialize;
-use tch::vision::imagenet;
+use tch::{nn::FuncT, vision::imagenet};
 
 
 mod nn;
@@ -15,8 +15,8 @@ pub struct ImageDefenition {
 }
 
 
-pub fn recognize_image(weights:&std::path::Path, data: Vec<u8>) -> Result<ImageDefenition,Error>{
-    let output = nn::recognize_image(weights,data)?;
+pub fn recognize_image(model: &mut FuncT<'static>, data: Vec<u8>) -> Result<ImageDefenition,Error>{
+    let output = nn::recognize_image(model,data)?;
     let mut image_definition = ImageDefenition {
         classes: Vec::new()
     };
