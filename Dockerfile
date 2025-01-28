@@ -19,7 +19,7 @@ RUN pip3 install torch==2.4.0 torchvision==0.19.0 torchaudio==2.4.0 --index-url 
 
 # Копирование исходников
 WORKDIR /usr/src/app
-COPY Cargo.toml Cargo.lock .env resnet34.ot ./
+COPY Cargo.toml Cargo.lock .env resnet34.safetensors ./
 COPY src src
 
 # Билдим
@@ -53,7 +53,7 @@ WORKDIR /
 RUN mkdir /opt/app
 COPY --from=builder /usr/src/app/target/release/sandbox_rust_torch /opt/app/sandbox_rust_torch
 COPY --from=builder /usr/src/app/.env /opt/app/.env
-COPY --from=builder /usr/src/app/resnet34.ot /opt/app/resnet34.ot
+COPY --from=builder /usr/src/app/resnet34.safetensors /opt/app/resnet34.safetensors
 
 # Запуск приложения
 WORKDIR /opt/app
