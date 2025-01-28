@@ -15,14 +15,14 @@ async fn main() -> Result<(), Error> {
     let nats_subject_out = config.nats_subject_out;
     let mut vs =  tch::nn::VarStore::new(tch::Device::cuda_if_available());
 	println!("Cuda support: {}",vs.device().is_cuda());
-	let mut model = tch::vision::resnet::resnet34(&vs.root(), 1000);
+	let model = tch::vision::resnet::resnet34(&vs.root(), 1000);
     vs.load("resnet34.safetensors")?;
     println!("ready to recognize an image from nats");
     while let Some(message) = subscriber.next().await {
         let image_message_str = std::str::from_utf8(&message.payload)?;
         let deserialized_image_message: ImageRequest = from_str(&image_message_str)?;
         println!("image id {}",deserialized_image_message.id);
-        let output = sandbox_rust_torch::recognize_image(&mut model, deserialized_image_message.image.to_vec());
+        let output = sandbox_rust_torch::recognize_image(&model, deserialized_image_message.image.to_vec());
         match output {
             Ok(out) => {
                 let response = ImageResponse {

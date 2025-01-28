@@ -15,7 +15,7 @@ pub struct ImageDefenition {
 }
 
 
-pub fn recognize_image(model: &mut FuncT<'static>, data: Vec<u8>) -> Result<ImageDefenition,Error>{
+pub fn recognize_image(model: &FuncT<'static>, data: Vec<u8>) -> Result<ImageDefenition,Error>{
     let output = nn::recognize_image(model,data)?;
     let mut image_definition = ImageDefenition {
         classes: Vec::new()
